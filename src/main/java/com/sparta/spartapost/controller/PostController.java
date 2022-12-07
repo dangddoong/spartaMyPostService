@@ -4,10 +4,7 @@ import com.sparta.spartapost.dto.PostRequestDto;
 import com.sparta.spartapost.entity.Post;
 import com.sparta.spartapost.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -27,5 +24,9 @@ public class PostController {
     @GetMapping("/api/posts")
     public List<Post> getAllPosts(){
         return postService.getAllPosts();
+    }
+    @PutMapping("/api/post/{id}")
+    public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
+        return postService.updatePost(id, postRequestDto);
     }
 }
