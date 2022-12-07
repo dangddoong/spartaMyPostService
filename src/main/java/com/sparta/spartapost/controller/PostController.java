@@ -25,6 +25,10 @@ public class PostController {
     public List<Post> getAllPosts(){
         return postService.getAllPosts();
     }
+    @GetMapping("/api/post/{id}")
+    public Post getPost(@PathVariable Long id){
+        return postService.getPost(id);
+    }
     @PutMapping("/api/post/{id}")
     public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         return postService.updatePost(id, postRequestDto);
