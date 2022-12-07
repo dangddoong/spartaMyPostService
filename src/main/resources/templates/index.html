@@ -306,6 +306,9 @@
         </p>
     </div>
     <div class="area-write">
+        <input type="text" name="title" th:id="title" placeholder="제목을 입력해주세요">
+        <input type="text" name="name" th:id="name" placeholder="이름을 입력해주세요">
+        <input type="password" name="password" th:id="passwor" placeholder="비밀번호를 입력해주세요">
         <textarea class="field" placeholder="기억하고 싶은 내용을 입력하세요." name="contents" th:id="contents" cols="30"
                   rows="10"></textarea>
         <img src="/images/send.png" alt="" onclick="writePost()">
