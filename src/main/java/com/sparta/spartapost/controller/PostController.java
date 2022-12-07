@@ -1,6 +1,7 @@
 package com.sparta.spartapost.controller;
 
 import com.sparta.spartapost.dto.PostRequestDto;
+import com.sparta.spartapost.dto.PostResponseDto;
 import com.sparta.spartapost.entity.Post;
 import com.sparta.spartapost.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class PostController {
         return postService.updatePost(id, postRequestDto);
     }
     //TODO 비밀번호를 어떤 어노테이션으로 입력받을지 수정해야됨(url에 비밀번호 노출이 안되도록 PostDeleteRequestDto를 하나 만들어줘야되나...)
-    @DeleteMapping("/api/post/{id}")
+    @DeleteMapping("/api/post/{id}/{pw}")
     public String deletePost(@PathVariable Long id, @PathVariable String pw){
         return postService.deletePost(id, pw);
     }
