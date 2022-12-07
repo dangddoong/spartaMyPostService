@@ -1,5 +1,6 @@
 package com.sparta.spartapost.entity;
 
+import com.sparta.spartapost.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,5 +21,10 @@ public class Post extends Timestamped {
     private String password;
     @Column(nullable = false)
     private String contents;
-
+    public Post(PostRequestDto postRequestDto){
+        this.title = postRequestDto.getTitle();
+        this.username = postRequestDto.getUsername();
+        this.password = postRequestDto.getPassword();
+        this.contents = postRequestDto.getContents();
+    }
 }
