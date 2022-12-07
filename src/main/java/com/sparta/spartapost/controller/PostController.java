@@ -29,9 +29,10 @@ public class PostController {
     public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         return postService.updatePost(id, postRequestDto);
     }
+    //TODO 비밀번호를 어떤 어노테이션으로 입력받을지 수정해야됨(url에 비밀번호 노출이 안되도록 PostDeleteRequestDto를 하나 만들어줘야되나...)
     @DeleteMapping("/api/post/{id}")
-    public Long deletePost(@PathVariable Long id){
-        return postService.deletePost(id);
+    public String deletePost(@PathVariable Long id, @PathVariable String pw){
+        return postService.deletePost(id, pw);
     }
 
 }
