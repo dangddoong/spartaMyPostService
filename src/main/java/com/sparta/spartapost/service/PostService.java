@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    public boolean pwIsValid(PostRequestDto postRequestDto, Post post){ return postRequestDto.getPassword().equals(post.getPassword());}
     public Post createPost(PostRequestDto postRequestDto) {
         Post post = new Post(postRequestDto);
         postRepository.save(post);
@@ -27,7 +28,12 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
+        if(pwIsValid(postRequestDto, post)){
         post.updatePost(postRequestDto);
         return post.getId();
+    }
+
+    public Long deletePost(Long id) {
+
     }
 }
