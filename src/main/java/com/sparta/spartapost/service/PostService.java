@@ -1,9 +1,9 @@
 package com.sparta.spartapost.service;
 
 import com.sparta.spartapost.dto.PostRequestDto;
+import com.sparta.spartapost.dto.PostResponseDto;
 import com.sparta.spartapost.entity.Post;
 import com.sparta.spartapost.repository.PostRepository;
-import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +17,10 @@ public class PostService {
     public boolean pwIsValid(String inputPw, String postPw){
         return inputPw.equals(postPw);
     }
-    public Post createPost(PostRequestDto postRequestDto) {
+    public PostResponseDto createPost(PostRequestDto postRequestDto) {
         Post post = new Post(postRequestDto);
         postRepository.save(post);
-        return post;
+        return new PostResponseDto(post);
     }
     @Transactional(readOnly = true)
     public List<Post> getAllPosts(){

@@ -19,7 +19,7 @@ public class PostController {
         return new ModelAndView("index");
     }
     @PostMapping("/api/post")
-    public Post createPost(@RequestBody PostRequestDto postRequestDto){
+    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto){
         return postService.createPost(postRequestDto);
     }
     @GetMapping("/api/posts")
