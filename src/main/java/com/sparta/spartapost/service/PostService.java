@@ -36,14 +36,14 @@ public class PostService {
         return new PostResponseDto(post);
     }
     @Transactional
-    public Long updatePost(Long id, PostRequestDto postRequestDto){
+    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto){
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
         );
         if(pwIsValid(postRequestDto.getPassword(), post.getPassword())){
-        post.updatePost(postRequestDto);
-        return post.getId();
-    } return 1L;//TODO 나중에 리턴값 DTO로 바꿔줘야함.
+            post.updatePost(postRequestDto);
+            return new PostResponseDto(postRepository.findById(id).get());
+        } return new PostResponseDto();//TODO 비밀번호가 다를 때 리턴값 잡아줘야합니다.
     }
     @Transactional
     public String deletePost(Long id, String pw) {

@@ -23,4 +23,7 @@ public class PostResponseDto {
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
     }
+    public PostResponseDto(){
+        this.contents = "비밀번호가 다릅니다";
+    }
 }
