@@ -25,11 +25,10 @@ public class PostController {
     }
     @GetMapping("/api/posts")
     public List<PostResponseDto> getAllPosts(){
-        return postService.getAllPosts().stream()
-                .map(PostResponseDto::new).collect(Collectors.toList());
+        return postService.getAllPosts();
     }
     @GetMapping("/api/post/{id}")
-    public Post getPost(@PathVariable Long id){
+    public PostResponseDto getPost(@PathVariable Long id){
         return postService.getPost(id);
     }
     @PutMapping("/api/post/{id}")

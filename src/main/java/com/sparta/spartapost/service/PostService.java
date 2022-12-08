@@ -24,14 +24,16 @@ public class PostService {
         return new PostResponseDto(post);
     }
     @Transactional(readOnly = true)
-    public List<Post> getAllPosts(){
-        return postRepository.findAllByOrderByModifiedAtDesc();
+    public List<PostResponseDto> getAllPosts(){
+        return postRepository.findAllByOrderByModifiedAtDesc().stream()
+                .map(PostResponseDto::new).collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
-    public Post getPost(Long id) {
-        return postRepository.findById(id).orElseThrow(
+    public PostResponseDto getPost(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
         );
+        return new PostResponseDto(post);
     }
     @Transactional
     public Long updatePost(Long id, PostRequestDto postRequestDto){
