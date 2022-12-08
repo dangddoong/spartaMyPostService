@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @Getter
 public class PostResponseDto {
 //    private Long id;
-    private String title;
-    private String username;
-    private String contents;
-    private LocalDateTime createdAt;
+    private final String title;
+    private final String username;
+    private final String contents;
+    private final LocalDateTime createdAt;
 //    private LocalDateTime modifiedAt;
 
     public PostResponseDto(Post post){
@@ -23,7 +23,7 @@ public class PostResponseDto {
         this.createdAt = post.getCreatedAt();
 //        this.modifiedAt = post.getModifiedAt();
     }
-    public PostResponseDto(){
-        this.contents = "비밀번호가 다릅니다";
-    }
+//    public PostResponseDto(){
+//        this.contents = "비밀번호가 다릅니다";
+//    }
 }
