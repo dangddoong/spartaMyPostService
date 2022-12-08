@@ -40,10 +40,11 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
         );
-        if(pwIsValid(postRequestDto.getPassword(), post.getPassword())){
-            post.updatePost(postRequestDto);
-            return new PostResponseDto(postRepository.findById(id).get());
-        } return new PostResponseDto();//TODO 비밀번호가 다를 때 리턴값 잡아줘야합니다.
+        post.validatePassword(postRequestDto.getPassword());
+        post.updatePost(postRequestDto);
+        postRepository.save(post);
+        return new PostResponseDto(post);
+//        } return new PostResponseDto();//TODO 비밀번호가 다를 때 리턴값 잡아줘야합니다.
     }
     @Transactional
     public String deletePost(Long id, String pw) {

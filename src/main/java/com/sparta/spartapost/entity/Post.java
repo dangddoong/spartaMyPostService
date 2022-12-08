@@ -37,4 +37,9 @@ public class Post extends Timestamped {
     private PostResponseDto convertToPostResponseDto(Post post){
         return new PostResponseDto(post);
     }
+
+    public void validatePassword(String password) {
+        if (!password.equals(this.getPassword())) throw new IllegalArgumentException("비밀번호 불일치");
+    }
+
 }
