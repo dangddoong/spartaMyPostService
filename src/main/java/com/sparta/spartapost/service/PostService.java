@@ -47,13 +47,14 @@ public class PostService {
 //        } return new PostResponseDto();//TODO 비밀번호가 다를 때 리턴값 잡아줘야합니다.
     }
     @Transactional
-    public String deletePost(Long id, String pw) {
+    public void  deletePost(Long id, String pw) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
         );
         if(pwIsValid(pw, post.getPassword())){
             postRepository.deleteById(id);
-            return "삭제에 성공했습니다.";
-        } return "비밀번호가 다릅니다. 삭제 실패";
+        }else {
+            throw new IllegalArgumentException("비밀번호 불일치");
+        }
     }
 }
