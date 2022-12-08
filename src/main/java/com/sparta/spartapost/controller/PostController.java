@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,8 +24,9 @@ public class PostController {
         return postService.createPost(postRequestDto);
     }
     @GetMapping("/api/posts")
-    public List<Post> getAllPosts(){
-        return postService.getAllPosts();
+    public List<PostResponseDto> getAllPosts(){
+        return postService.getAllPosts().stream()
+                .map(PostResponseDto::new).collect(Collectors.toList());
     }
     @GetMapping("/api/post/{id}")
     public Post getPost(@PathVariable Long id){
