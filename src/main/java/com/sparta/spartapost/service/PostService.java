@@ -18,6 +18,7 @@ public class PostService {
     public boolean pwIsValid(String inputPw, String postPw){
         return inputPw.equals(postPw);
     }
+    @Transactional
     public PostResponseDto createPost(PostRequestDto postRequestDto) {
         Post post = new Post(postRequestDto);
         postRepository.save(post);
