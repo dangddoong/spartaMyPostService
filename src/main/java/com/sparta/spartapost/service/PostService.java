@@ -47,10 +47,10 @@ public class PostService {
     @Transactional
     public void  deletePost(Long id, String pw) {
         Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
-        if(pwIsValid(pw, post.getPassword())){
-            postRepository.deleteById(id);
-        }else {
-            throw new IllegalArgumentException("비밀번호 불일치");
-        }
+        post.validatePassword(pw);
+        postRepository.deleteById(id);
+//        }else {
+//            throw new IllegalArgumentException("비밀번호 불일치");
+//        }
     }
 }
