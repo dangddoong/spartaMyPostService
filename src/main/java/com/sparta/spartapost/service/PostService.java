@@ -3,6 +3,7 @@ package com.sparta.spartapost.service;
 import com.sparta.spartapost.dto.PostRequestDto;
 import com.sparta.spartapost.dto.PostResponseDto;
 import com.sparta.spartapost.entity.Post;
+import com.sparta.spartapost.exception.PostNotExistException;
 import com.sparta.spartapost.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,16 +32,12 @@ public class PostService {
     }
     @Transactional(readOnly = true)
     public PostResponseDto getPost(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
-        );
+        Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
         return new PostResponseDto(post);
     }
     @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto){
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
-        );
+        Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
         post.validatePassword(postRequestDto.getPassword());
         post.updatePost(postRequestDto);
         postRepository.save(post);
@@ -49,9 +46,7 @@ public class PostService {
     }
     @Transactional
     public void  deletePost(Long id, String pw) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시물이 존재하지 않습니다.")
-        );
+        Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
         if(pwIsValid(pw, post.getPassword())){
             postRepository.deleteById(id);
         }else {
