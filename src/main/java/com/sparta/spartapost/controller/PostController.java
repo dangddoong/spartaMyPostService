@@ -19,7 +19,7 @@ public class PostController {
     public ModelAndView home(){
         return new ModelAndView("index");
     }
-    @PostMapping("/api/post")
+    @PostMapping("/api/posts")
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto){
         return postService.createPost(postRequestDto);
     }
@@ -27,16 +27,16 @@ public class PostController {
     public List<PostResponseDto> getAllPosts(){
         return postService.getAllPosts();
     }
-    @GetMapping("/api/post/{id}")
+    @GetMapping("/api/posts/{id}")
     public PostResponseDto getPost(@PathVariable Long id){
         return postService.getPost(id);
     }
-    @PutMapping("/api/post/{id}")
+    @PutMapping("/api/posts/{id}")
     public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         return postService.updatePost(id, postRequestDto);
     }
     //TODO 비밀번호를 어떤 어노테이션으로 입력받을지 수정해야됨(url에 비밀번호 노출이 안되도록 PostDeleteRequestDto를 하나 만들어줘야되나...)
-    @DeleteMapping("/api/post/{id}/{pw}")
+    @DeleteMapping("/api/posts/{id}/{pw}")
     public void deletePost(@PathVariable Long id, @PathVariable String pw) {
         postService.deletePost(id, pw);
     }
