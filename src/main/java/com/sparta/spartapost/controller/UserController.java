@@ -4,6 +4,8 @@ import com.sparta.spartapost.dto.LoginRequestDto;
 import com.sparta.spartapost.dto.SignupRequestDto;
 import com.sparta.spartapost.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,16 +31,16 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+    public ResponseEntity<String> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
         // return으로 성공했다는 메세지, 상태코드를 반환해야함.
-        return "회원가입 성공(리턴값 바꿔줘야합니당)";
+        return new ResponseEntity<>("회원가입 성공", HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto) {
         userService.login(loginRequestDto);
-        return "로그인 성공(리턴값 바꿔줘야합니다)";
+        return new ResponseEntity<>("회원가입 성공", HttpStatus.OK);
     }
 
 }
