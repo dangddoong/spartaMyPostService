@@ -19,27 +19,24 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
-    private String password;
-    @Column(nullable = false)
     private String contents;
-    public Post(PostRequestDto postRequestDto){
+    public Post(PostRequestDto postRequestDto, String username){
         this.title = postRequestDto.getTitle();
-        this.username = postRequestDto.getUsername();
-        this.password = postRequestDto.getPassword();
+        this.username = username;
         this.contents = postRequestDto.getContents();
     }
 
-    public void updatePost(PostRequestDto postRequestDto) {
-        this.title = postRequestDto.getTitle();
-        this.username = postRequestDto.getUsername();
-        this.contents = postRequestDto.getContents();
-    }
+//    public void updatePost(PostRequestDto postRequestDto) {
+//        this.title = postRequestDto.getTitle();
+//        this.username = postRequestDto.getUsername();
+//        this.contents = postRequestDto.getContents();
+//    }
     private PostResponseDto convertToPostResponseDto(Post post){
         return new PostResponseDto(post);
     }
 
-    public void validatePassword(String password) {
-        if (!password.equals(this.getPassword())) throw new IllegalArgumentException("비밀번호 불일치");
-    }
+//    public void validatePassword(String password) {
+//        if (!password.equals(this.getPassword())) throw new IllegalArgumentException("비밀번호 불일치");
+//    }
 
 }
