@@ -32,10 +32,10 @@ public class PostController {
     public PostResponseDto getPost(@PathVariable Long id){
         return postService.getPost(id);
     }
-//    @PutMapping("/api/posts/{id}")
-//    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
-//        return postService.updatePost(id, postRequestDto);
-//    }
+    @PutMapping("/api/posts/{id}")
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
+        return postService.updatePost(id, postRequestDto, request);
+    }
     //TODO 비밀번호를 어떤 어노테이션으로 입력받을지 수정해야됨(url에 비밀번호 노출이 안되도록 PostDeleteRequestDto를 하나 만들어줘야되나...)
 //    @DeleteMapping("/api/posts/{id}/{pw}")
 //    public void deletePost(@PathVariable Long id, @PathVariable String pw) {
