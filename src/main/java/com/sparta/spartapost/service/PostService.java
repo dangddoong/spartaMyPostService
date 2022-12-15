@@ -23,9 +23,6 @@ public class PostService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    //    public boolean pwIsValid(String inputPw, String postPw){
-//        return inputPw.equals(postPw);
-//    }
     public void tokenNullCheck(String token) {
         if (token == null) throw new IllegalArgumentException("토큰이 텅텅 비었어요");
     }
@@ -35,11 +32,11 @@ public class PostService {
         String token = jwtUtil.resolveToken(request);
         String username;
         tokenNullCheck(token);
-        if(jwtUtil.validateToken(token)){
+        if (jwtUtil.validateToken(token)) {
             username = jwtUtil.getUserInfoFromToken(token).getSubject();
-        }else throw new IllegalArgumentException("Token Error");
+        } else throw new IllegalArgumentException("Token Error");
 
-        Post post = new Post(postRequestDto,username);
+        Post post = new Post(postRequestDto, username);
         postRepository.save(post);
         return new PostResponseDto(post);
     }
@@ -61,22 +58,28 @@ public class PostService {
         String token = jwtUtil.resolveToken(request);
         String username;
         tokenNullCheck(token);
-        if(jwtUtil.validateToken(token)){
+        if (jwtUtil.validateToken(token)) {
             username = jwtUtil.getUserInfoFromToken(token).getSubject();
-        }else throw new IllegalArgumentException("Token Error");
+        } else throw new IllegalArgumentException("Token Error");
 
         Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
         post.validateUsername(username);
         post.updatePost(postRequestDto);
         postRepository.save(post);
         return new PostResponseDto(post);
-//        } return new PostResponseDto();//TODO 비밀번호가 다를 때 리턴값 잡아줘야합니다.
     }
 
-//    @Transactional
-//    public void deletePost(Long id, String pw) {
-//        Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
-//        post.validatePassword(pw);
-//        postRepository.deleteById(id);
-//    }
+    @Transactional
+    public void deletePost(Long id, HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        String username;
+        tokenNullCheck(token);
+        if (jwtUtil.validateToken(token)) {
+            username = jwtUtil.getUserInfoFromToken(token).getSubject();
+        } else throw new IllegalArgumentException("Token Error");
+
+        Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
+        post.validateUsername(username);
+        postRepository.deleteById(id);
+    }
 }
