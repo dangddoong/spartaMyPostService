@@ -1,5 +1,7 @@
 package com.sparta.spartapost.entity;
 
+import com.sparta.spartapost.dto.SignupRequestDto;
+import com.sparta.spartapost.exception.MissmatchPasswordException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,4 +20,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    public User(SignupRequestDto signupRequestDto) {
+        this.username = signupRequestDto.getUsername();
+        this.password = signupRequestDto.getPassword();
+    }
+    public void validatePassword(String password) {
+        if (!password.equals(this.getPassword())) throw new MissmatchPasswordException();
+    }
 }

@@ -2,12 +2,10 @@ package com.sparta.spartapost.controller;
 
 import com.sparta.spartapost.dto.LoginRequestDto;
 import com.sparta.spartapost.dto.SignupRequestDto;
+import com.sparta.spartapost.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 // @RestController는 @Controller에 @ResponseBody가 추가된 것. 주용도는 Json형태로 객체 데이터를 반환하는 것.
@@ -29,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(SignupRequestDto signupRequestDto) {
+    public String signup(@RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
         return "redirect:/api/user/login";
     }
