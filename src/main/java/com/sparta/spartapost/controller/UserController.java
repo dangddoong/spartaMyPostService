@@ -29,13 +29,14 @@ public class UserController {
     @PostMapping("/signup")
     public String signup(@RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
-        return "redirect:/api/user/login";
+        // return으로 성공했다는 메세지, 상태코드를 반환해야함.
+        return "회원가입 성공(리턴값 바꿔줘야합니당)";
     }
 
     @PostMapping("/login")
-    public String login(LoginRequestDto loginRequestDto) {
+    public String login(@RequestBody LoginRequestDto loginRequestDto) {
         userService.login(loginRequestDto);
-        return "redirect:/api/shop";
+        return "로그인 성공(리턴값 바꿔줘야합니다)";
     }
 
 }

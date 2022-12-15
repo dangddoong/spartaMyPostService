@@ -22,7 +22,7 @@ public class UserService {
     public void signup(SignupRequestDto signupRequestDto) {
         //회원 중복 확인 by username
         Optional<User> overlapUser = userRepository.findByUsername(signupRequestDto.getUsername());
-        overlapUser.orElseThrow(OverlapUserExistException::new);
+        if(overlapUser.isPresent()) throw new OverlapUserExistException();
         User user = new User(signupRequestDto);
         userRepository.save(user);
     }
