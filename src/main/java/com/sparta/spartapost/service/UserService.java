@@ -26,8 +26,7 @@ public class UserService {
         //회원 중복 확인 by username
         Optional<User> overlapUser = userRepository.findByUsername(signupRequestDto.getUsername());
         if(overlapUser.isPresent()) throw new OverlapUserExistException();
-        User user = new User(signupRequestDto);
-        userRepository.save(user);
+        userRepository.save(new User(signupRequestDto));
     }
 
     @Transactional
