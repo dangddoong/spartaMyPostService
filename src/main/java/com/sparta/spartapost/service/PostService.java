@@ -1,6 +1,7 @@
 package com.sparta.spartapost.service;
 
 import com.sparta.spartapost.dto.PostRequestDto;
+import com.sparta.spartapost.dto.GetPostResponseDto;
 import com.sparta.spartapost.dto.PostResponseDto;
 import com.sparta.spartapost.entity.Post;
 import com.sparta.spartapost.exception.PostNotExistException;
@@ -10,9 +11,7 @@ import com.sparta.spartapost.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import io.jsonwebtoken.Claims;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,45 +22,27 @@ public class PostService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public void tokenNullCheck(String token) {
-        if (token == null) throw new IllegalArgumentException("토큰이 텅텅 비었어요");
-    }
-
     @Transactional
-    public PostResponseDto createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        String username;
-        tokenNullCheck(token);
-        if (jwtUtil.validateToken(token)) {
-            username = jwtUtil.getUserInfoFromToken(token).getSubject();
-        } else throw new IllegalArgumentException("Token Error");
-
+    public PostResponseDto createPost(PostRequestDto postRequestDto, String username) {
         Post post = new Post(postRequestDto, username);
         postRepository.save(post);
         return new PostResponseDto(post);
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getAllPosts() {
+    public List<GetPostResponseDto> getAllPosts() {
         return postRepository.findAllByOrderByModifiedAtDesc().stream()
-                .map(PostResponseDto::new).collect(Collectors.toList());
+                .map(GetPostResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public PostResponseDto getPost(Long id) {
+    public GetPostResponseDto getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
-        return new PostResponseDto(post);
+        return new GetPostResponseDto(post);
     }
 
     @Transactional
-    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto, HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        String username;
-        tokenNullCheck(token);
-        if (jwtUtil.validateToken(token)) {
-            username = jwtUtil.getUserInfoFromToken(token).getSubject();
-        } else throw new IllegalArgumentException("Token Error");
-
+    public PostResponseDto userUpdatePost(Long id, PostRequestDto postRequestDto, String username) {
         Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
         post.validateUsername(username);
         post.updatePost(postRequestDto);
@@ -70,16 +51,22 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long id, HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        String username;
-        tokenNullCheck(token);
-        if (jwtUtil.validateToken(token)) {
-            username = jwtUtil.getUserInfoFromToken(token).getSubject();
-        } else throw new IllegalArgumentException("Token Error");
+    public PostResponseDto adminUpdatePost(Long id, PostRequestDto postRequestDto) {
+        Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
+        post.updatePost(postRequestDto);
+        postRepository.save(post);
+        return new PostResponseDto(post);
+    }
 
+    @Transactional
+    public void userDeletePost(Long id, String username) {
         Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
         post.validateUsername(username);
+        postRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void adminDeletePost(Long id) {
         postRepository.deleteById(id);
     }
 }
