@@ -40,8 +40,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        String username = userService.login(loginRequestDto);
-        response.addHeader(jwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(username));
+        String token = userService.login(loginRequestDto);
+        response.addHeader(jwtUtil.AUTHORIZATION_HEADER, token);
         return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
     }
 

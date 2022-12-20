@@ -5,9 +5,7 @@ import com.sparta.spartapost.exception.MissmatchPasswordException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
@@ -20,9 +18,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    public User(SignupRequestDto signupRequestDto) {
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role ;
+
+    public User(SignupRequestDto signupRequestDto, UserRoleEnum role) {
         this.username = signupRequestDto.getUsername();
         this.password = signupRequestDto.getPassword();
+        this.role = role;
     }
     public void validatePassword(String password) {
         if (!password.equals(this.getPassword())) throw new MissmatchPasswordException();
