@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+
 
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
@@ -30,9 +30,10 @@ public class UserService {
     }
 
     @Transactional
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public String login(LoginRequestDto loginRequestDto) {
         User user = userRepository.findByUsername(loginRequestDto.getUsername()).orElseThrow(UserNotExistException::new);
         user.validatePassword(loginRequestDto.getPassword());
-        response.addHeader(jwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername()));
+        return user.getUsername();
+
     }
 }

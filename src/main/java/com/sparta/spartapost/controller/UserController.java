@@ -2,6 +2,7 @@ package com.sparta.spartapost.controller;
 
 import com.sparta.spartapost.dto.LoginRequestDto;
 import com.sparta.spartapost.dto.SignupRequestDto;
+import com.sparta.spartapost.jwt.JwtUtil;
 import com.sparta.spartapost.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-
-
+    private final JwtUtil jwtUtil;
     @GetMapping("/signup")
     public ModelAndView signupPage() {
         return new ModelAndView("signup");
@@ -40,7 +40,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto, response);
+        String username = userService.login(loginRequestDto);
+        response.addHeader(jwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(username));
         return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
     }
 
