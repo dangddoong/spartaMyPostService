@@ -25,7 +25,7 @@ public class Comment extends Timestamped {
 
     public Comment(CommentRequestDto commentRequestDto, Post post, String contentsWriter){
         this.post = post;
-        this.contentsWriter = post.getUser().getUsername();
+        this.contentsWriter = contentsWriter;
         this.contents = commentRequestDto.getContents();
         post.getCommentList().add(this);
     }

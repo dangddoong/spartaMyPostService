@@ -22,7 +22,7 @@ public class CommentService {
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, String username) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotExistException::new);
         Comment comment = new Comment(commentRequestDto, post, username);
-        commentRepository.save(comment);
+        commentRepository.saveAndFlush(comment);
         return new CommentResponseDto(comment);
     }
 

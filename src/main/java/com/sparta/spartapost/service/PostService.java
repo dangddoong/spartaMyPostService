@@ -27,7 +27,7 @@ public class PostService {
     public PostResponseDto createPost(PostRequestDto postRequestDto, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
         Post post = new Post(postRequestDto, user);
-        postRepository.save(post);
+        postRepository.saveAndFlush(post);
         return new PostResponseDto(post);
     }
 
