@@ -14,7 +14,7 @@ public class SignupRequestDto {
     private String username;
 
     @Size(min = 8, max = 15,message = "password Size error")
-    @Pattern(regexp ="^[a-zA-Z0-9]*$", message = "password Pattern error")
+    @Pattern(regexp ="^[a-zA-Z0-9`~!@#$%^&*()-_=+]*$", message = "password Pattern error")
     private String password;
     private String adminToken="";
 
