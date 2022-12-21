@@ -2,6 +2,7 @@ package com.sparta.spartapost.service;
 
 import com.sparta.spartapost.dto.CommentRequestDto;
 import com.sparta.spartapost.dto.CommentResponseDto;
+import com.sparta.spartapost.entity.Post;
 import com.sparta.spartapost.exception.CommentNotExistException;
 import com.sparta.spartapost.exception.PostNotExistException;
 import com.sparta.spartapost.repository.CommentRepository;
@@ -19,8 +20,8 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, String username) {
-        if (!postRepository.existsById(postId)) throw new PostNotExistException();
-        Comment comment = new Comment(commentRequestDto, postId, username);
+        Post post = postRepository.findById(postId).orElseThrow(PostNotExistException::new);
+        Comment comment = new Comment(commentRequestDto, post, username);
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
     }

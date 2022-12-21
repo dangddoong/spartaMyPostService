@@ -13,21 +13,25 @@ public class Comment extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long commentId;
-    @Column(nullable = false)
-    private Long postId;
+//    @Column(nullable = false)
+//    private Long postId;
     @Column(nullable = false)
     private String contents;
     @Column(nullable = false)
-    private String username;
+    private String contentsWriter;
+    @ManyToOne
+    @JoinColumn(name = "Post_id", nullable = false)
+    private Post post;
 
-    public Comment(CommentRequestDto commentRequestDto, Long postId, String username){
-        this.postId = postId;
-        this.username = username;
+    public Comment(CommentRequestDto commentRequestDto, Post post, String contentsWriter){
+        this.post = post;
+        this.contentsWriter = post.getUser().getUsername();
         this.contents = commentRequestDto.getContents();
+        post.getCommentList().add(this);
     }
 
     public void validateUsername(String username) {
-        if(!username.equals(this.getUsername())) throw new IllegalArgumentException("작성자명 불일치");
+        if(!username.equals(this.getContentsWriter())) throw new IllegalArgumentException("작성자명 불일치");
     }
 
     public void updateComment(CommentRequestDto commentRequestDto) {

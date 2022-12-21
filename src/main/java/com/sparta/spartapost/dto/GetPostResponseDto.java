@@ -1,10 +1,13 @@
 package com.sparta.spartapost.dto;
 
+import com.sparta.spartapost.entity.Comment;
 import com.sparta.spartapost.entity.Post;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class GetPostResponseDto {
@@ -16,13 +19,14 @@ public class GetPostResponseDto {
     private final List<CommentResponseDto> commentResponseDtoList;
 
 
-    public GetPostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList ){
+    public GetPostResponseDto(Post post){
         this.id = post.getId();
         this.title = post.getTitle();
-        this.username = post.getUsername();
+        this.username = post.getUser().getUsername();
         this.contents = post.getContents();
         this.createdAt = post.getCreatedAt();
-        this.commentResponseDtoList = commentResponseDtoList;
+        this.commentResponseDtoList = post.getCommentList().stream().sorted(Comparator.comparing(Comment::getModifiedAt).reversed())
+                .map(CommentResponseDto::new).collect(Collectors.toList());
     }
 //    public PostResponseDto(){
 //        this.contents = "비밀번호가 다릅니다";
