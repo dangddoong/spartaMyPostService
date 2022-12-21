@@ -65,6 +65,7 @@ public class PostService {
 
     @Transactional
     public void adminDeletePost(Long id) {
+        if(!postRepository.existsById(id)) throw new PostNotExistException();
         postRepository.deleteById(id);
     }
 }

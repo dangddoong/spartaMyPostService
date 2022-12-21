@@ -2,11 +2,8 @@ package com.sparta.spartapost.controller;
 
 import com.sparta.spartapost.dto.CommentRequestDto;
 import com.sparta.spartapost.dto.CommentResponseDto;
-import com.sparta.spartapost.dto.PostRequestDto;
-import com.sparta.spartapost.dto.PostResponseDto;
 import com.sparta.spartapost.jwt.JwtUtil;
 import com.sparta.spartapost.service.CommentService;
-import com.sparta.spartapost.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-public class CommentContoller {
+public class CommentController {
     private final CommentService commentService;
     private final JwtUtil jwtUtil;
 
@@ -30,7 +27,7 @@ public class CommentContoller {
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
-        return commentService.createComment(postId, CommentRequestDto username);
+        return commentService.createComment(postId, commentRequestDto, username);
     }
 
     @PutMapping("/api/comments/{commentId}")
@@ -64,7 +61,7 @@ public class CommentContoller {
         return new ResponseEntity<>("댓글 삭제완료", HttpStatus.OK);
     }
     @DeleteMapping("/api/admin/comments/{commentId}")
-    public ResponseEntity<String> userDeleteComment(@PathVariable Long commentId, HttpServletRequest request){
+    public ResponseEntity<String> adminDeleteComment(@PathVariable Long commentId, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
