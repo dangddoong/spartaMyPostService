@@ -32,10 +32,9 @@ public class PostController {
     @PostMapping("/api/posts")
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
-        String username;
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
-        username = jwtUtil.getUserInfoFromToken(token).getSubject();
+        String username = jwtUtil.getUserInfoFromToken(token).getSubject();
         return postService.createPost(postRequestDto, username);
     }
 
