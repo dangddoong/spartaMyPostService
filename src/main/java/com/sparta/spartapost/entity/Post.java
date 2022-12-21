@@ -16,17 +16,21 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
-    private String username;
-    @Column(nullable = false)
     private String contents;
-    public Post(PostRequestDto postRequestDto, String username) {
+    @ManyToOne
+    @JoinColumn(name = "USER_USERNAME", nullable = false)
+    private User user;
+
+    public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
-        this.username = username;
+        this.user = user;
         this.contents = postRequestDto.getContents();
     }
+
     public void validateUsername(String username) {
-        if (!username.equals(this.getUsername())) throw new IllegalArgumentException("작성자명 불일치");
+        if (!username.equals(this.user.getUsername())) throw new IllegalArgumentException("작성자명 불일치");
     }
+
     public void updatePost(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.contents = postRequestDto.getContents();
