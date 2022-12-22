@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Comment extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 //    @Column(nullable = false)
 //    private Long postId;
@@ -19,7 +19,7 @@ public class Comment extends Timestamped {
     private String contents;
     @Column(nullable = false)
     private String contentsWriter;
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "Post_id", nullable = false)
     private Post post;
 

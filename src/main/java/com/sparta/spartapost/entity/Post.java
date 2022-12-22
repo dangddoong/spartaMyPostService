@@ -14,16 +14,17 @@ import java.util.List;
 public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "Post_id")
     private Long id;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
     private String contents;
-    @ManyToOne(optional = false, fetch = FetchType.EAGER )
+    @ManyToOne(optional = false, fetch = FetchType.LAZY )
     @JoinColumn(name = "USER_USERNAME", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Comment> commentList = new ArrayList<>();
 
     public Post(PostRequestDto postRequestDto, User user) {
