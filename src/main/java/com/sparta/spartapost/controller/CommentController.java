@@ -2,8 +2,11 @@ package com.sparta.spartapost.controller;
 
 import com.sparta.spartapost.dto.CommentRequestDto;
 import com.sparta.spartapost.dto.CommentResponseDto;
+import com.sparta.spartapost.exception.MissmatchRoleException;
+import com.sparta.spartapost.exception.TokenNotExistException;
 import com.sparta.spartapost.jwt.JwtUtil;
 import com.sparta.spartapost.service.CommentService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +21,7 @@ public class CommentController {
     private final JwtUtil jwtUtil;
 
     public void tokenNullCheck(String token) {
-        if (token == null) throw new IllegalArgumentException("토큰이 텅텅 비었어요");
+        if (token == null) throw new TokenNotExistException();
     }
 
     @PostMapping("/api/comments/{postId}")
@@ -34,10 +37,11 @@ public class CommentController {
     public CommentResponseDto userUpdateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
-        String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
-        if (!role.equals("USER")) throw new IllegalArgumentException("Wrong Approach");
-        String username = jwtUtil.getUserInfoFromToken(token).getSubject();
+//        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
+        Claims claims = jwtUtil.getUserInfoFromToken(token);
+        String role = claims.get(JwtUtil.AUTHORIZATION_KEY).toString();
+        if (!role.equals("USER")) throw new MissmatchRoleException();
+        String username = claims.getSubject();
         return commentService.userUpdateComment(commentId, commentRequestDto, username);
     }
     @PutMapping("/api/admin/comments/{commentId}")
@@ -46,7 +50,7 @@ public class CommentController {
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
-        if (!role.equals("ADMIN")) throw new IllegalArgumentException("Wrong Approach");
+        if (!role.equals("ADMIN")) throw new MissmatchRoleException();
         return commentService.adminUpdateComment(commentId, commentRequestDto);
     }
     @DeleteMapping("/api/comments/{commentId}")
@@ -55,7 +59,7 @@ public class CommentController {
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
-        if (!role.equals("USER")) throw new IllegalArgumentException("Wrong Approach");
+        if (!role.equals("USER")) throw new MissmatchRoleException();
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
         commentService.userDeleteComment(commentId, username);
         return new ResponseEntity<>("댓글 삭제완료", HttpStatus.OK);
@@ -66,7 +70,7 @@ public class CommentController {
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
-        if (!role.equals("ADMIN")) throw new IllegalArgumentException("Wrong Approach");
+        if (!role.equals("ADMIN")) throw new MissmatchRoleException();
         commentService.adminDeleteComment(commentId);
         return new ResponseEntity<>("댓글 삭제완료", HttpStatus.OK);
     }

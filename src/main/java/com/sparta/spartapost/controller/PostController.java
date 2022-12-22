@@ -3,6 +3,8 @@ package com.sparta.spartapost.controller;
 import com.sparta.spartapost.dto.PostRequestDto;
 import com.sparta.spartapost.dto.GetPostResponseDto;
 import com.sparta.spartapost.dto.PostResponseDto;
+import com.sparta.spartapost.exception.MissmatchRoleException;
+import com.sparta.spartapost.exception.TokenNotExistException;
 import com.sparta.spartapost.jwt.JwtUtil;
 import com.sparta.spartapost.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ public class PostController {
     private final JwtUtil jwtUtil;
 
     public void tokenNullCheck(String token) {
-        if (token == null) throw new IllegalArgumentException("토큰이 텅텅 비었어요");
+        if (token == null) throw new TokenNotExistException();
     }
 
     @GetMapping("/")
@@ -54,7 +56,7 @@ public class PostController {
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
-        if(!role.equals("USER")) throw new IllegalArgumentException("Wrong Approach");
+        if(!role.equals("USER")) throw new MissmatchRoleException();
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
         return postService.userUpdatePost(id, postRequestDto, username);
     }
@@ -65,7 +67,7 @@ public class PostController {
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
-        if(!role.equals("ADMIN")) throw new IllegalArgumentException("Wrong Approach");
+        if(!role.equals("ADMIN")) throw new MissmatchRoleException();
         return postService.adminUpdatePost(id, postRequestDto);
     }
 
@@ -75,7 +77,7 @@ public class PostController {
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
-        if(!role.equals("USER")) throw new IllegalArgumentException("Wrong Approach");
+        if(!role.equals("USER")) throw new MissmatchRoleException();
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
         postService.userDeletePost(id, username);
         return new ResponseEntity<>("게시물 삭제완료", HttpStatus.OK);
@@ -86,7 +88,7 @@ public class PostController {
         tokenNullCheck(token);
         if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
-        if(!role.equals("ADMIN")) throw new IllegalArgumentException("Wrong Approach");
+        if(!role.equals("ADMIN")) throw new MissmatchRoleException();
         postService.adminDeletePost(id);
         return new ResponseEntity<>("게시물 삭제완료", HttpStatus.OK);
     }
