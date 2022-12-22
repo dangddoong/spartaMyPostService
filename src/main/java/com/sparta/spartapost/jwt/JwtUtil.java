@@ -1,6 +1,7 @@
 package com.sparta.spartapost.jwt;
 
 import com.sparta.spartapost.entity.UserRoleEnum;
+import com.sparta.spartapost.exception.AuthException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
@@ -79,7 +80,13 @@ public class JwtUtil {
 
     // 토큰에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        } catch (Exception e) {
+            log.info("AuthException");
+            throw new AuthException();
+        }
     }
+
 
 }

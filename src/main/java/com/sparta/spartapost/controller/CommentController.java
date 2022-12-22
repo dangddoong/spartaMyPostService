@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
@@ -34,11 +35,13 @@ public class CommentController {
     }
 
     @PutMapping("/api/comments/{commentId}")
-    public CommentResponseDto userUpdateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
+    public CommentResponseDto userUpdateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) throws AuthException {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
+
 //        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         Claims claims = jwtUtil.getUserInfoFromToken(token);
+
         String role = claims.get(JwtUtil.AUTHORIZATION_KEY).toString();
         if (!role.equals("USER")) throw new MissmatchRoleException();
         String username = claims.getSubject();

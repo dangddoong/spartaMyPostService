@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.security.auth.message.AuthException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(TokenNotExistException.class)
@@ -18,8 +20,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({JwtException.class})
-    protected ResponseEntity<String> handleJwtException(JwtException e) {
+    @ExceptionHandler ({AuthException.class})
+    protected ResponseEntity<String> handleJwtException(AuthException e) {
         return new ResponseEntity<>("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
     }
 
@@ -36,8 +38,8 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<String> handleMissMatchRoleException(MissmatchRoleException e){
         return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);
     }
-    @ExceptionHandler(IllegalArgumentException.class)
-    protected ResponseEntity<String> handleEtcException(IllegalArgumentException e){
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<String> handleEtcException(RuntimeException e){
         return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
