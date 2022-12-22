@@ -19,7 +19,7 @@ public class Comment extends Timestamped {
     private String contents;
     @Column(nullable = false)
     private String contentsWriter;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Post_id", nullable = false)
     private Post post;
 
@@ -27,7 +27,7 @@ public class Comment extends Timestamped {
         this.post = post;
         this.contentsWriter = contentsWriter;
         this.contents = commentRequestDto.getContents();
-        post.getCommentList().add(this);
+        post.getCommentList().add(this); //이거는 세터랑 다름없다.
     }
 
     public void validateUsername(String username) {

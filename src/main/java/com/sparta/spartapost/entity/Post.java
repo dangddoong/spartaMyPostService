@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Post extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Post_id")
     private Long id;
     @Column(nullable = false)
@@ -24,14 +24,17 @@ public class Post extends Timestamped {
     @JoinColumn(name = "USER_USERNAME", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Comment> commentList = new ArrayList<>();
+    String username;
+
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+//    List<Comment> commentList = new ArrayList<>();
 
     public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
         this.user = user;
         this.contents = postRequestDto.getContents();
     }
+
 
     public void validateUsername(String username) {
         if (!username.equals(this.user.getUsername())) throw new IllegalArgumentException("작성자명 불일치");
