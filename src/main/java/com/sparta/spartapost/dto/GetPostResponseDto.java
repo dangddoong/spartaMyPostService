@@ -27,10 +27,8 @@ public class GetPostResponseDto {
         this.username = post.getUser().getUsername();
         this.contents = post.getContents();
         this.createdAt = post.getCreatedAt();
+        this.commentResponseDtoList = commentList.stream().map(CommentResponseDto::new).collect(Collectors.toList());
 //        this.commentResponseDtoList = CommentRepository.findAllByPostIdOrderByModifiedAtDesc(post.getId()).stream().sorted(Comparator.comparing(Comment::getModifiedAt).reversed())
 //                .map(CommentResponseDto::new).collect(Collectors.toList());
     }
-//    public PostResponseDto(){
-//        this.contents = "비밀번호가 다릅니다";
-//    }
 }

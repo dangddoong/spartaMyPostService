@@ -37,8 +37,10 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<GetPostResponseDto> getAllPosts() {
-        List<GetPostResponseDto> getPostResponseDtoList = new ArrayList<>();
         List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
+        if(postList.isEmpty()) throw new PostNotExistException();
+        List<GetPostResponseDto> getPostResponseDtoList = new ArrayList<>();
+
         for (Post post : postList) {
             List<Comment> commentListInPost = commentRepository.findAllByPostIdOrderByModifiedAtDesc(post.getId());
             GetPostResponseDto getPostResponseDto = new GetPostResponseDto(post, commentListInPost);
@@ -50,7 +52,9 @@ public class PostService {
     @Transactional(readOnly = true)
     public GetPostResponseDto getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(PostNotExistException::new);
-        return new GetPostResponseDto(post);
+        List<Comment> commentListInPost = commentRepository.findAllByPostIdOrderByModifiedAtDesc(post.getId());
+
+        return new GetPostResponseDto(post, commentListInPost);
     }
 
     @Transactional
