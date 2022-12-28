@@ -35,7 +35,6 @@ public class PostController {
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
         return postService.createPost(postRequestDto, username);
     }
@@ -54,7 +53,6 @@ public class PostController {
     public PostResponseDto userUpdatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
         if(!role.equals("USER")) throw new MissmatchRoleException();
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
@@ -65,7 +63,6 @@ public class PostController {
     public PostResponseDto adminUpdatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
         if(!role.equals("ADMIN")) throw new MissmatchRoleException();
         return postService.adminUpdatePost(id, postRequestDto);
@@ -75,7 +72,6 @@ public class PostController {
     public ResponseEntity<String> userDeletePost(@PathVariable Long id, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
         if(!role.equals("USER")) throw new MissmatchRoleException();
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
@@ -86,7 +82,6 @@ public class PostController {
     public ResponseEntity<String> adminDeletePost(@PathVariable Long id, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
         if(!role.equals("ADMIN")) throw new MissmatchRoleException();
         postService.adminDeletePost(id);

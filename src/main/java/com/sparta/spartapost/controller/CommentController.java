@@ -29,17 +29,14 @@ public class CommentController {
     public CommentResponseDto createComment(@PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
         return commentService.createComment(postId, commentRequestDto, username);
     }
 
     @PutMapping("/api/comments/{commentId}")
-    public CommentResponseDto userUpdateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) throws AuthException {
+    public CommentResponseDto userUpdateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request)  {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-
-//        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         Claims claims = jwtUtil.getUserInfoFromToken(token);
 
         String role = claims.get(JwtUtil.AUTHORIZATION_KEY).toString();
@@ -51,7 +48,6 @@ public class CommentController {
     public CommentResponseDto adminUpdateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
         if (!role.equals("ADMIN")) throw new MissmatchRoleException();
         return commentService.adminUpdateComment(commentId, commentRequestDto);
@@ -60,7 +56,6 @@ public class CommentController {
     public ResponseEntity<String> userDeleteComment(@PathVariable Long commentId, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
         if (!role.equals("USER")) throw new MissmatchRoleException();
         String username = jwtUtil.getUserInfoFromToken(token).getSubject();
@@ -71,7 +66,6 @@ public class CommentController {
     public ResponseEntity<String> adminDeleteComment(@PathVariable Long commentId, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         tokenNullCheck(token);
-        if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("Token Error");
         String role = jwtUtil.getUserInfoFromToken(token).get(JwtUtil.AUTHORIZATION_KEY).toString();
         if (!role.equals("ADMIN")) throw new MissmatchRoleException();
         commentService.adminDeleteComment(commentId);

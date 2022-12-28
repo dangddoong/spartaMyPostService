@@ -3,17 +3,20 @@ package com.sparta.spartapost.service;
 import com.sparta.spartapost.dto.PostRequestDto;
 import com.sparta.spartapost.dto.GetPostResponseDto;
 import com.sparta.spartapost.dto.PostResponseDto;
+import com.sparta.spartapost.entity.Comment;
 import com.sparta.spartapost.entity.Post;
 import com.sparta.spartapost.entity.User;
 import com.sparta.spartapost.exception.PostNotExistException;
 import com.sparta.spartapost.exception.UserNotExistException;
 import com.sparta.spartapost.jwt.JwtUtil;
+import com.sparta.spartapost.repository.CommentRepository;
 import com.sparta.spartapost.repository.PostRepository;
 import com.sparta.spartapost.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public PostResponseDto createPost(PostRequestDto postRequestDto, String username) {
@@ -33,8 +37,14 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<GetPostResponseDto> getAllPosts() {
-        return postRepository.findAllByOrderByModifiedAtDesc().stream()
-                .map(GetPostResponseDto::new).collect(Collectors.toList());
+        List<GetPostResponseDto> getPostResponseDtoList = new ArrayList<>();
+        List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
+        for (Post post : postList) {
+            List<Comment> commentListInPost = commentRepository.findAllByPostIdOrderByModifiedAtDesc(post.getId());
+            GetPostResponseDto getPostResponseDto = new GetPostResponseDto(post, commentListInPost);
+            getPostResponseDtoList.add(getPostResponseDto);
+        }
+        return getPostResponseDtoList;
     }
 
     @Transactional(readOnly = true)
@@ -69,7 +79,7 @@ public class PostService {
 
     @Transactional
     public void adminDeletePost(Long id) {
-        if(!postRepository.existsById(id)) throw new PostNotExistException();
+        if (!postRepository.existsById(id)) throw new PostNotExistException();
         postRepository.deleteById(id);
     }
 }

@@ -2,7 +2,9 @@ package com.sparta.spartapost.dto;
 
 import com.sparta.spartapost.entity.Comment;
 import com.sparta.spartapost.entity.Post;
+import com.sparta.spartapost.repository.CommentRepository;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -19,14 +21,14 @@ public class GetPostResponseDto {
     private final List<CommentResponseDto> commentResponseDtoList;
 
 
-    public GetPostResponseDto(Post post){
+    public GetPostResponseDto(Post post, List<Comment> commentList){
         this.id = post.getId();
         this.title = post.getTitle();
         this.username = post.getUser().getUsername();
         this.contents = post.getContents();
         this.createdAt = post.getCreatedAt();
-        this.commentResponseDtoList = post.getCommentList().stream().sorted(Comparator.comparing(Comment::getModifiedAt).reversed())
-                .map(CommentResponseDto::new).collect(Collectors.toList());
+//        this.commentResponseDtoList = CommentRepository.findAllByPostIdOrderByModifiedAtDesc(post.getId()).stream().sorted(Comparator.comparing(Comment::getModifiedAt).reversed())
+//                .map(CommentResponseDto::new).collect(Collectors.toList());
     }
 //    public PostResponseDto(){
 //        this.contents = "비밀번호가 다릅니다";
