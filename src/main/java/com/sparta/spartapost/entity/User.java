@@ -24,9 +24,9 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role ;
 
-    public User(SignupRequestDto signupRequestDto, UserRoleEnum role) {
-        this.username = signupRequestDto.getUsername();
-        this.password = signupRequestDto.getPassword();
+    public User(String username, String password , UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
         this.role = role;
     }
     public void validatePassword(String password) {

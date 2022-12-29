@@ -6,10 +6,12 @@ import com.sparta.spartapost.dto.PostResponseDto;
 import com.sparta.spartapost.exception.MissmatchRoleException;
 import com.sparta.spartapost.exception.TokenNotExistException;
 import com.sparta.spartapost.jwt.JwtUtil;
+import com.sparta.spartapost.security.UserDetailsImpl;
 import com.sparta.spartapost.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,11 +34,9 @@ public class PostController {
     }
 
     @PostMapping("/api/posts")
-    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        tokenNullCheck(token);
-        String username = jwtUtil.getUserInfoFromToken(token).getSubject();
-        return postService.createPost(postRequestDto, username);
+    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return postService.createPost(postRequestDto, userDetails.getUsername());
     }
 
     @GetMapping("/api/posts")

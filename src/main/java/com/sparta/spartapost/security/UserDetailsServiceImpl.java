@@ -1,6 +1,7 @@
 package com.sparta.spartapost.security;
 
 import com.sparta.spartapost.entity.User;
+import com.sparta.spartapost.exception.UserNotExistException;
 import com.sparta.spartapost.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,9 +16,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
 
         return new UserDetailsImpl(user, user.getUsername());
     }

@@ -44,14 +44,14 @@ public class WebSecurityConfig {
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().antMatchers("/api/user/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/posts/{id}").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/posts").permitAll()
+        http.authorizeRequests()
+                .antMatchers("/api/user/**").permitAll()
                 .anyRequest().authenticated()
+
                 // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-//        http.formLogin().disable();
+//        http.formLogin().loginPage("/api/user/signIn").permitAll();
 //        http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
 
         return http.build();
