@@ -37,7 +37,7 @@ public class UserController {
         return new ResponseEntity<>("회원가입 성공", HttpStatus.CREATED);
     }
 
-    @PostMapping("/api/user/signIn")
+    @PostMapping("/api/user/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String token = userService.login(loginRequestDto);
         response.addHeader(jwtUtil.AUTHORIZATION_HEADER, token);

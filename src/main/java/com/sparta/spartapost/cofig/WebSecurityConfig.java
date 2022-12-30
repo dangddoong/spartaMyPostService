@@ -46,6 +46,7 @@ public class WebSecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/api/user/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/posts/**").permitAll()
                 .anyRequest().authenticated()
 
                 // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
